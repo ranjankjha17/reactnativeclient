@@ -78,12 +78,15 @@ export const MasterForm = () => {
 
       }
 
+      const TIMEOUT_DURATION = 5000; // Set your desired timeout duration in milliseconds
+
       const headers = {
         'Content-Type': 'multipart/form-data',
       };
       //console.log("jj",formDataToSend)
+      try {
 
-      const response = await axios.post('https://reactnativeserver.vercel.app/upload', formDataToSend, { headers });
+      const response = await axios.post('http://localhost:5000/upload', formDataToSend, { headers,timeout: TIMEOUT_DURATION});
 
       const { data } = response;
       const { success, message } = data;
@@ -100,6 +103,21 @@ export const MasterForm = () => {
           photo: null,
         });
       }
+    }catch(error){
+      if (axios.isCancel(error)) {
+        console.log('Request canceled:', error.message);
+      } else {
+        console.error('Error submitting form1:', error);
+        console.error('Full error object:', error);
+
+        // You can also log specific properties of the error object
+        console.error('Error response data:', error.response?.data);
+        console.error('Error status:', error.response?.status);
+    
+      }
+    
+    }
+      
     } catch (error) {
       console.error('Error submitting form:', error);
     }
