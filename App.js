@@ -1,12 +1,14 @@
 import { ScrollView, StyleSheet, View } from 'react-native';
 import { MasterForm } from './pages/MasterForm';
 import { NewGroup } from './pages/NewGroup';
+import { Form2 } from './pages/Form2';
 
 export default function App() {
   return (
     <ScrollView style={{marginTop:50}}>
-      {/* <MasterForm/> */}
-      <NewGroup/>
+      <MasterForm/>
+      {/* <NewGroup/> */}
+      {/* <Form2/> */}
     </ScrollView>
   );
 }

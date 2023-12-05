@@ -25,14 +25,14 @@ export const NewGroup = () => {
            };
     
         try {
-            // const { data } = await axios.post('http://localhost:5000/create-group', formData)
+            const { data } = await axios.post('http://172.24.0.168:5000/create-group', formData)
             //const data=await createNewGroup(formData)
-            const {data}=await axios({
-                method: 'POST',
-                url: 'https://reactnativeserver.vercel.app/create-group',
-                data: formData,
-                headers:headers
-              })
+            // const {data}=await axios({
+            //     method: 'POST',
+            //     url: 'https://reactnativeserver.vercel.app/create-group',
+            //     data: formData,
+            //     headers:headers
+            //   })
               
             const { message, success } = data;
             if (success) {

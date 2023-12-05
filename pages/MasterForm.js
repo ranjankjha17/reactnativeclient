@@ -88,12 +88,17 @@ export const MasterForm = () => {
       try {
 
      // const response = await axios.post('https://reactnativeserver.vercel.app/upload', formDataToSend, { headers});
-     const response=await axios({
-      method: 'POST',
-      url: `https://reactnativeserver.vercel.app/upload`,
-      data: formDataToSend,
-      headers:headers
-    })
+    //  const response=await axios({
+    //   method: 'POST',
+    //   url: `http://172.24.0.168:5000/upload`,
+    //   data: formDataToSend,
+    //   headers:headers
+    // })
+
+    const response = await axios.post('http://172.24.0.168:5000/upload', formDataToSend, {
+      headers,
+    });
+
 
       const { data } = response;
       const { success, message } = data;
@@ -151,7 +156,7 @@ export const MasterForm = () => {
       />
       <TextInput
         style={styles.input}
-        placeholder="RR Number"
+        placeholder="Aadhaar Number"
         onChangeText={(text) => handleChange('rrnumber', text)}
         value={formData.rrnumber}
       />
