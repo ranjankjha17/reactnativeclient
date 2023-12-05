@@ -72,21 +72,28 @@ export const MasterForm = () => {
       if (formData.photo) {
         formDataToSend.append('photo', {
           uri: formData.photo,
-        //type: 'image/png', // Adjust the type based on the image format
-        //name: 'photo.png',
+        type: 'image/png', // Adjust the type based on the image format
+        name: 'photo.png',
         });
 
       }
 
-      const TIMEOUT_DURATION = 5000; // Set your desired timeout duration in milliseconds
+      const TIMEOUT_DURATION = 10000; // Set your desired timeout duration in milliseconds
 
       const headers = {
-        'Content-Type': 'multipart/form-data',
-      };
+        Accept: 'application/json',
+        'Content-Type': 'multipart/form-data'
+       };
       //console.log("jj",formDataToSend)
       try {
 
-      const response = await axios.post('http://localhost:5000/upload', formDataToSend, { headers,timeout: TIMEOUT_DURATION});
+     // const response = await axios.post('https://reactnativeserver.vercel.app/upload', formDataToSend, { headers});
+     const response=await axios({
+      method: 'POST',
+      url: `https://reactnativeserver.vercel.app/upload`,
+      data: formDataToSend,
+      headers:headers
+    })
 
       const { data } = response;
       const { success, message } = data;
@@ -102,6 +109,7 @@ export const MasterForm = () => {
           id: '',
           photo: null,
         });
+        alert("Your form is submitted")
       }
     }catch(error){
       if (axios.isCancel(error)) {
@@ -139,7 +147,7 @@ export const MasterForm = () => {
         style={styles.input}
         placeholder="Group BC"
         onChangeText={(text) => handleChange('groupbc', text)}
-        value={formData.groupbd}
+        value={formData.groupbc}
       />
       <TextInput
         style={styles.input}
