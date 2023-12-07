@@ -1,6 +1,6 @@
 import axios from 'axios'
 import React, { useEffect, useState } from 'react'
-import { Image, Text, View } from 'react-native'
+import { Image, Text, View} from 'react-native'
 import base64 from 'base64-js';
 
 export const TestGetimage = () => {
@@ -22,19 +22,23 @@ export const TestGetimage = () => {
         <View>
             <Text>Test Get image</Text>
 
-            {/* {imageData.map((e, index) => {
+            {imageData.map((e, index) => {
           try {
             const base64Image = base64.fromByteArray(new Uint8Array(e?.photo?.data));
-            console.log('Base64 Image:', base64Image);
+           // console.log('Base64 Image:', base64Image);
+            if (!base64Image) {
+              console.warn(`Image data is missing for item at index ${index}`);
+              return null; 
+          }
 
-            const dataURI = `data:image/png;base64,${base64Image}`;
+            const dataURI = `data:image/jpg;base64,${base64Image}`;
   
            //console.log('Data URI:', dataURI);
   
             return (
               <Image
                 source={{ uri: dataURI }}
-                style={{ width: 200, height: 200 }}
+                style={{ width: 20, height: 20 }}
                 key={index}
               />
             );
@@ -42,10 +46,10 @@ export const TestGetimage = () => {
             console.error('Error processing image data:', error);
             return null; // Return null for images that couldn't be processed
           }
-        })} */}
+        })}
 
 
-            {imageData.map((item, index) => {
+            {/* {imageData.map((item, index) => {
                // const base64Image = item?.photo?.data;
                 const base64Image = base64.fromByteArray(new Uint8Array(item?.photo?.data));
 
@@ -61,7 +65,7 @@ export const TestGetimage = () => {
                         style={{ width: 400, height: 400 }}
                     />
                 );
-            })}
+            })} */}
 
         </View>
     )

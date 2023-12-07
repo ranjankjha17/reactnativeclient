@@ -72,8 +72,8 @@ export const MasterForm = () => {
       if (formData.photo) {
         formDataToSend.append('photo', {
           uri: formData.photo,
-        type: 'image/png', // Adjust the type based on the image format
-        name: 'photo.png',
+        type: 'image/jpg', // Adjust the type based on the image format
+        name: 'photo.jpg',
         });
 
       }

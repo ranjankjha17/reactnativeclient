@@ -10,9 +10,9 @@ export default function App() {
     <ScrollView style={{marginTop:50}}>
       {/* <MasterForm/> */}
       {/* <NewGroup/> */}
-      {/* <Form2/> */}
+      <Form2/>
       {/* <TestImage/> */}
-      <TestGetimage/>
+      {/* <TestGetimage/> */}
     </ScrollView>
   );
 }
