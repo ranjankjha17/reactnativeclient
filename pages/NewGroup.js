@@ -78,7 +78,7 @@ export const NewGroup = () => {
                 <TouchableOpacity style={styles.button} onPress={handleSubmit}>
                     <Text style={styles.buttonText}>Save</Text>
                 </TouchableOpacity>
-                <TouchableOpacity style={styles.button} onPress={handleSubmit} >
+                <TouchableOpacity style={styles.button} onPress={""} >
                     <Text style={styles.buttonText}>Exit</Text>
                 </TouchableOpacity>
             </View>

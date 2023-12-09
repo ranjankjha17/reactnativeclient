@@ -2,8 +2,13 @@ import React, { useEffect, useState } from 'react';
 import { View, TextInput, Button, StyleSheet, Text, TouchableOpacity, Alert, Image, Platform } from 'react-native';
 import * as ImagePicker from 'expo-image-picker';
 import axios from 'axios';
+import { Picker } from '@react-native-picker/picker';
+
 
 export const MasterForm = () => {
+  const [codeNo, setCodeNo] = useState('')
+  const [groupList, setGroupList] = useState([])
+  const [selectedValue, setSelectedValue] = useState('');
   const [formData, setFormData] = useState({
     code: '',
     groupbc: '',
@@ -15,6 +20,12 @@ export const MasterForm = () => {
     photo: null,
 
   });
+
+  const fetchCode = async () => {
+    const { data } = await axios.get('http://172.24.0.168:5000/get-code')
+    console.log(data.data)
+    setCodeNo(data.data)
+  }
   useEffect(() => {
     (async () => {
       if (Platform.OS !== 'web') {
@@ -24,7 +35,15 @@ export const MasterForm = () => {
         }
       }
     })();
-  }, []);
+    const getGroup = async () => {
+      const { data } = await axios.get('http://172.24.0.168:5000/get-group')
+      setGroupList(data.data)
+
+    }
+    getGroup()
+    fetchCode()
+
+  }, [codeNo]);
 
   const handleChange = (field, value) => {
     setFormData({
@@ -41,7 +60,7 @@ export const MasterForm = () => {
         aspect: [4, 3],
         quality: 0.5,
       });
-  //console.log(result.assets[0].uri)
+      //console.log(result.assets[0].uri)
       // Use "canceled" instead of "cancelled"
       if (!result.canceled) {
         // Use the "assets" array to access selected assets
@@ -58,8 +77,10 @@ export const MasterForm = () => {
       console.error('Error selecting photo:', error);
     }
   };
-  
+
   const handleSubmit = async () => {
+
+    formData["code"]=codeNo
     try {
       const formDataToSend = new FormData();
 
@@ -72,8 +93,8 @@ export const MasterForm = () => {
       if (formData.photo) {
         formDataToSend.append('photo', {
           uri: formData.photo,
-        type: 'image/jpg', // Adjust the type based on the image format
-        name: 'photo.jpg',
+          type: 'image/jpg', // Adjust the type based on the image format
+          name: 'photo.jpg',
         });
 
       }
@@ -83,54 +104,56 @@ export const MasterForm = () => {
       const headers = {
         Accept: 'application/json',
         'Content-Type': 'multipart/form-data'
-       };
-      //console.log("jj",formDataToSend)
+      };
+      console.log("jj", formData)
       try {
 
-     // const response = await axios.post('https://reactnativeserver.vercel.app/upload', formDataToSend, { headers});
-    //  const response=await axios({
-    //   method: 'POST',
-    //   url: `http://172.24.0.168:5000/upload`,
-    //   data: formDataToSend,
-    //   headers:headers
-    // })
+        // const response = await axios.post('https://reactnativeserver.vercel.app/upload', formDataToSend, { headers});
+        //  const response=await axios({
+        //   method: 'POST',
+        //   url: `http://172.24.0.168:5000/upload`,
+        //   data: formDataToSend,
+        //   headers:headers
+        // })
 
-    const response = await axios.post('http://172.24.0.168:5000/upload', formDataToSend, {
-      headers,
-    });
-
-
-      const { data } = response;
-      const { success, message } = data;
-
-      if (success) {
-        setFormData({
-          code: '',
-          groupbc: '',
-          rrnumber: '',
-          name: '',
-          cast: '',
-          mobileno: '',
-          id: '',
-          photo: null,
+        const response = await axios.post('http://172.24.0.168:5000/upload', formDataToSend, {
+          headers,
         });
-        alert("Your form is submitted")
-      }
-    }catch(error){
-      if (axios.isCancel(error)) {
-        console.log('Request canceled:', error.message);
-      } else {
-        console.error('Error submitting form1:', error);
-        console.error('Full error object:', error);
 
-        // You can also log specific properties of the error object
-        console.error('Error response data:', error.response?.data);
-        console.error('Error status:', error.response?.status);
-    
+
+        const { data } = response;
+        const { success, message } = data;
+
+        if (success) {
+          setFormData({
+            code: '',
+            groupbc: '',
+            rrnumber: '',
+            name: '',
+            cast: '',
+            mobileno: '',
+            id: '',
+            photo: null,
+          });
+          setSelectedValue('')
+          setCodeNo('')
+          alert("Your form is submitted")
+        }
+      } catch (error) {
+        if (axios.isCancel(error)) {
+          console.log('Request canceled:', error.message);
+        } else {
+          console.error('Error submitting form1:', error);
+          console.error('Full error object:', error);
+
+          // You can also log specific properties of the error object
+          console.error('Error response data:', error.response?.data);
+          console.error('Error status:', error.response?.status);
+
+        }
+
       }
-    
-    }
-      
+
     } catch (error) {
       console.error('Error submitting form:', error);
     }
@@ -142,18 +165,46 @@ export const MasterForm = () => {
   return (
     <View style={styles.container}>
       <Text style={styles.heading}>Master Form</Text>
-      <TextInput
+      {/* <TextInput
         style={styles.input}
         placeholder="Code"
-        onChangeText={(text) => handleChange('code', text)}
-        value={formData.code}
-      />
-      <TextInput
+        onChangeText={(text) => handleChange('code', codeNo)}
+        value={codeNo}
+      /> */}
+      <View style={styles.codeContainer}>
+        <Text style={{flex:1}}>Code</Text>
+        <Text style={{flex:1}}>{codeNo}</Text>
+      </View>
+      <View style={styles.pickerContainer}>
+        <Text style={styles.label}>Group</Text>
+        <Picker
+          style={styles.picker}
+          selectedValue={selectedValue}
+          onValueChange={(itemValue, itemIndex) => {
+            setSelectedValue(itemValue);
+            handleChange('groupbc', itemValue);
+            // const selectedGroup = groupList.find(group => group.groupName === itemValue);
+            // setBcamount(selectedGroup ? selectedGroup.amount : '');
+
+          }}
+        >
+          <Picker.Item label="Select Group" value="" />
+          {groupList.map((element) => (
+            <Picker.Item
+              key={element.group_id}
+              label={element.groupName}
+              value={element.groupName}
+            />
+          ))}
+        </Picker>
+      </View>
+
+      {/* <TextInput
         style={styles.input}
         placeholder="Group BC"
         onChangeText={(text) => handleChange('groupbc', text)}
         value={formData.groupbc}
-      />
+      /> */}
       <TextInput
         style={styles.input}
         placeholder="Aadhaar Number"
@@ -185,9 +236,9 @@ export const MasterForm = () => {
         value={formData.id}
       />
       <TouchableOpacity style={styles.button} onPress={handleChoosePhoto}>
-          <Text style={[styles.buttonText, { fontWeight: 'normal' }]}>Choose Photo</Text>
-        </TouchableOpacity>
-        {formData.photo && (
+        <Text style={[styles.buttonText, { fontWeight: 'normal' }]}>Choose Photo</Text>
+      </TouchableOpacity>
+      {formData.photo && (
         <Image source={{ uri: formData.photo }} style={styles.photoPreview} />
       )}
 
@@ -195,7 +246,7 @@ export const MasterForm = () => {
         <TouchableOpacity style={styles.button} onPress={handleSubmit}>
           <Text style={styles.buttonText}>Save</Text>
         </TouchableOpacity>
-        <TouchableOpacity style={styles.button} onPress={handleSubmit} >
+        <TouchableOpacity style={styles.button} onPress={""} >
           <Text style={styles.buttonText}>Update</Text>
         </TouchableOpacity>
       </View>
@@ -250,5 +301,30 @@ const styles = StyleSheet.create({
     height: 200,
     marginTop: 10,
   },
+  pickerContainer: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    width: '100%',
+    marginBottom: 10,
+  },
+  label: {
+    fontSize: 16,
+    marginBottom: 8,
+  },
+  picker: {
+    width: '55%',
+    height: 40,
+    borderWidth: 1,
+    borderColor: '#ccc',
+    borderRadius: 5,
+  },
+  codeContainer:{
+    flexDirection: 'row',
+    justifyContent: 'flex-start',
+    alignItems: 'center',
+    width: '100%',
+    marginBottom: 10,
 
+  }
 });
