@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { View, TextInput, Button, StyleSheet, Text, TouchableOpacity, Alert, Image, Platform } from 'react-native';
+import { View, TextInput, Button, StyleSheet, Text, TouchableOpacity, Alert, Image, Platform, ScrollView } from 'react-native';
 import * as ImagePicker from 'expo-image-picker';
 import axios from 'axios';
 import { Picker } from '@react-native-picker/picker';
@@ -80,7 +80,7 @@ export const MasterForm = () => {
 
   const handleSubmit = async () => {
 
-    formData["code"]=codeNo
+    formData["code"] = codeNo
     try {
       const formDataToSend = new FormData();
 
@@ -163,17 +163,11 @@ export const MasterForm = () => {
 
 
   return (
-    <View style={styles.container}>
+    <ScrollView contentContainerStyle={styles.container}>
       <Text style={styles.heading}>Master Form</Text>
-      {/* <TextInput
-        style={styles.input}
-        placeholder="Code"
-        onChangeText={(text) => handleChange('code', codeNo)}
-        value={codeNo}
-      /> */}
       <View style={styles.codeContainer}>
-        <Text style={{flex:1}}>Code</Text>
-        <Text style={{flex:1}}>{codeNo}</Text>
+        <Text style={{ flex: 1 }}>Code</Text>
+        <Text style={{ flex: 1 }}>{codeNo}</Text>
       </View>
       <View style={styles.pickerContainer}>
         <Text style={styles.label}>Group</Text>
@@ -183,8 +177,6 @@ export const MasterForm = () => {
           onValueChange={(itemValue, itemIndex) => {
             setSelectedValue(itemValue);
             handleChange('groupbc', itemValue);
-            // const selectedGroup = groupList.find(group => group.groupName === itemValue);
-            // setBcamount(selectedGroup ? selectedGroup.amount : '');
 
           }}
         >
@@ -199,12 +191,6 @@ export const MasterForm = () => {
         </Picker>
       </View>
 
-      {/* <TextInput
-        style={styles.input}
-        placeholder="Group BC"
-        onChangeText={(text) => handleChange('groupbc', text)}
-        value={formData.groupbc}
-      /> */}
       <TextInput
         style={styles.input}
         placeholder="Aadhaar Number"
@@ -235,13 +221,14 @@ export const MasterForm = () => {
         onChangeText={(text) => handleChange('id', text)}
         value={formData.id}
       />
-      <TouchableOpacity style={styles.button} onPress={handleChoosePhoto}>
-        <Text style={[styles.buttonText, { fontWeight: 'normal' }]}>Choose Photo</Text>
-      </TouchableOpacity>
-      {formData.photo && (
-        <Image source={{ uri: formData.photo }} style={styles.photoPreview} />
-      )}
-
+      <View style={styles.photoContainer}>
+        <TouchableOpacity style={styles.button} onPress={handleChoosePhoto}>
+          <Text style={[styles.buttonText, { fontWeight: 'normal' }]}>Choose Photo</Text>
+        </TouchableOpacity>
+        {formData.photo && (
+          <Image source={{ uri: formData.photo }} style={styles.photoPreview} />
+        )}
+      </View>
       <View style={styles.buttonContainer}>
         <TouchableOpacity style={styles.button} onPress={handleSubmit}>
           <Text style={styles.buttonText}>Save</Text>
@@ -251,17 +238,17 @@ export const MasterForm = () => {
         </TouchableOpacity>
       </View>
 
-    </View>
+    </ScrollView>
   );
 };
 
 const styles = StyleSheet.create({
   container: {
-    flex: 1,
+    flexGrow: 1,
     justifyContent: 'center',
     alignItems: 'center',
     padding: 16,
-    borderColor: "red"
+    borderColor: "red",
   },
   heading: {
     fontSize: 24,
@@ -296,6 +283,13 @@ const styles = StyleSheet.create({
     color: 'white',
     textAlign: 'center',
   },
+  
+  photoContainer: {
+    flexDirection: 'column',
+    // justifyContent: 'space-between',
+    width: '100%',
+  },
+
   photoPreview: {
     width: 200,
     height: 200,
@@ -319,7 +313,7 @@ const styles = StyleSheet.create({
     borderColor: '#ccc',
     borderRadius: 5,
   },
-  codeContainer:{
+  codeContainer: {
     flexDirection: 'row',
     justifyContent: 'flex-start',
     alignItems: 'center',
