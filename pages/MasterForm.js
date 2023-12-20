@@ -181,7 +181,7 @@ export const MasterForm = () => {
           }}
         >
           <Picker.Item label="Select Group" value="" />
-          {groupList.map((element) => (
+          {groupList?.map((element) => (
             <Picker.Item
               key={element.group_id}
               label={element.groupName}
